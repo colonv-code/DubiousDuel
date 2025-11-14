@@ -1,10 +1,19 @@
+import { useEffect, useState } from "react";
 import "./App.css";
+import { getPokemon, type Pokemon } from "./api/pokemon.api";
 
 function App() {
+  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    getPokemon().then(setPokemon);
+  }, []);
+
   return (
     <div>
-      <p>Twin where have you been</p>
-      <p>6 7</p>
+      {pokemon.map((pok) => (
+        <p>{pok.Name}</p>
+      ))}
     </div>
   );
 }
