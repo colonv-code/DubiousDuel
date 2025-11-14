@@ -1,0 +1,80 @@
+import { useState } from "react";
+import "./PageFrame.css";
+import { type Trainer } from "../../api/trainer.api";
+import { LoginPage } from "../Login/LoginPage";
+import { TrainerPage } from "../Trainer/TrainerPage";
+import { BattlePage } from "../Battle/BattlePage";
+import { HistoryPage } from "../History/HistoryPage";
+import { PokedexPage } from "../Pokedex/PokedexPage";
+
+export type Page = "login" | "trainer" | "battle" | "history" | "pokedex";
+
+export function PageFrame() {
+  const [currentPage, setCurrentPage] = useState<Page>("battle");
+  const [loggedInTrainer, setLoggedInTrainer] = useState<Trainer>({
+    username: "",
+    password: "",
+  });
+  const showSidebar = currentPage !== "login";
+
+  const pageComponents = {
+    login: (
+      <LoginPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
+    ),
+    trainer: (
+      <TrainerPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
+    ),
+    battle: (
+      <BattlePage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
+    ),
+    history: (
+      <HistoryPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
+    ),
+    pokedex: (
+      <PokedexPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
+    ),
+  };
+
+  return (
+    <div className="container">
+      {showSidebar && (
+        <div className="sidebar">
+          <h1>Dubious Duel</h1>
+          <button
+            className={`navbutton ${
+              currentPage === "trainer" && "navbuttonselected"
+            }`}
+            onClick={() => setCurrentPage("trainer")}
+          >
+            Trainer
+          </button>
+          <button
+            className={`navbutton ${
+              currentPage === "battle" && "navbuttonselected"
+            }`}
+            onClick={() => setCurrentPage("battle")}
+          >
+            Battle
+          </button>
+          <button
+            className={`navbutton ${
+              currentPage === "history" && "navbuttonselected"
+            }`}
+            onClick={() => setCurrentPage("history")}
+          >
+            History
+          </button>
+          <button
+            className={`navbutton ${
+              currentPage === "pokedex" && "navbuttonselected"
+            }`}
+            onClick={() => setCurrentPage("pokedex")}
+          >
+            Pokedex
+          </button>
+        </div>
+      )}
+      <div className="content">{pageComponents[currentPage]}</div>
+    </div>
+  );
+}
