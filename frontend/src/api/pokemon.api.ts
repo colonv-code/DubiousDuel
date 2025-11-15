@@ -35,5 +35,5 @@ export interface Move {
 
 export async function getPokemon() {
   const res = await fetch("http://localhost:3001/pokemon");
-  return res.json();
+  return (await res.json()) as Pokemon[];
 }
