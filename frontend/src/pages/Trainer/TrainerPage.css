@@ -1,0 +1,32 @@
+.trainerPage {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.teamBuilder {
+    flex: 3;
+    height: 100%;
+}
+
+.pokemonSidebar {
+    flex: 1;
+    border-left: 2px solid white;
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollContainer {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.pokemonRow {
+    border-bottom: 1px solid white;
+    padding: 5px 0px 5px 10px;
+    margin: 0;
+}
+
+.pokemonRow:hover {
+    cursor: pointer;
+}
