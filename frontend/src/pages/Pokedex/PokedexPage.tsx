@@ -1,7 +1,7 @@
 import type { Trainer } from "../../api/trainer.api";
 
 export interface PokedexPageProps {
-  trainer: Trainer;
+  trainer: Trainer | null;
   setTrainer: (trainer: Trainer) => void;
 }
 

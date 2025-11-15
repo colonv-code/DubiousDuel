@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./PageFrame.css";
 import { type Trainer } from "../../api/trainer.api";
 import { LoginPage } from "../Login/LoginPage";
@@ -10,17 +10,18 @@ import { PokedexPage } from "../Pokedex/PokedexPage";
 export type Page = "login" | "trainer" | "battle" | "history" | "pokedex";
 
 export function PageFrame() {
-  const [currentPage, setCurrentPage] = useState<Page>("battle");
-  const [loggedInTrainer, setLoggedInTrainer] = useState<Trainer>({
-    username: "",
-    password: "",
-  });
+  const [currentPage, setCurrentPage] = useState<Page>("login");
+  const [loggedInTrainer, setLoggedInTrainer] = useState<Trainer | null>(null);
   const showSidebar = currentPage !== "login";
 
+  useEffect(() => {
+    if (loggedInTrainer) {
+      setCurrentPage("trainer");
+    }
+  }, [loggedInTrainer]);
+
   const pageComponents = {
-    login: (
-      <LoginPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
-    ),
+    login: <LoginPage setTrainer={setLoggedInTrainer} />,
     trainer: (
       <TrainerPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
     ),
@@ -36,7 +37,7 @@ export function PageFrame() {
   };
 
   return (
-    <div className="container">
+    <div className="pageframe">
       {showSidebar && (
         <div className="sidebar">
           <h1>Dubious Duel</h1>

@@ -1,14 +1,14 @@
 import type { Trainer } from "../../api/trainer.api";
 
 export interface TrainerPageProps {
-  trainer: Trainer;
+  trainer: Trainer | null;
   setTrainer: (trainer: Trainer) => void;
 }
 
-export function TrainerPage({}: TrainerPageProps) {
+export function TrainerPage({ trainer }: TrainerPageProps) {
   return (
     <div>
-      <p>Trainer Page Here!</p>
+      <p>Hello, {trainer?.username}!</p>
     </div>
   );
 }

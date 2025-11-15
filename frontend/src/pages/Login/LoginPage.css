@@ -1,0 +1,12 @@
+.loginPage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.playButton {
+    width: 80px;
+}
