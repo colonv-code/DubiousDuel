@@ -6,7 +6,7 @@
 }
 
 .sidebar {
-    width: 20%;
+    flex: 1;
     min-width: 200px;
     border-right: 2px solid white;
     min-height: 100%;
@@ -15,7 +15,7 @@
 }
 
 .content {
-    width: 75%;
+    flex: 4;
     display: flex;
     flex-direction: column;
     max-height: 100%;
