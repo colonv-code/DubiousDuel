@@ -17,6 +17,8 @@ export function PageFrame() {
   useEffect(() => {
     if (loggedInTrainer) {
       setCurrentPage("trainer");
+    } else {
+      setCurrentPage("login");
     }
   }, [loggedInTrainer]);
 
@@ -34,6 +36,10 @@ export function PageFrame() {
     pokedex: (
       <PokedexPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
     ),
+  };
+
+  const handleLogoutClick = () => {
+    setLoggedInTrainer(null);
   };
 
   return (
@@ -72,6 +78,9 @@ export function PageFrame() {
             onClick={() => setCurrentPage("pokedex")}
           >
             Pokedex
+          </button>
+          <button className={`navbutton`} onClick={handleLogoutClick}>
+            Logout
           </button>
         </div>
       )}
