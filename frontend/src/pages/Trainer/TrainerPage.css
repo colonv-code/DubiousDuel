@@ -7,6 +7,38 @@
 .teamBuilder {
     flex: 3;
     height: 100%;
+    padding: 0px 16px 0px 16px;
+}
+
+.teamImageContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.teamPokemonImage {
+    width: 15vw;
+    height: 15vw;
+}
+
+.teamPokemonImage:hover {
+    cursor: pointer;
+}
+
+.teamActionContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 30px;
+}
+
+.teamActionButton {
+    height: 50px;
+    width: 100px;
 }
 
 .pokemonSidebar {
