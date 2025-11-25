@@ -14,12 +14,15 @@ const client = new MongoClient(process.env.MONGO_URI);
 const db = client.db("DubiousDuel");
 const pokemon = db.collection("Pokemon");
 const trainers = db.collection("Trainers");
+const battles = db.collection("Battles");
 
+// get all pokemon
 app.get("/pokemon", async (req, res) => {
   const all = await pokemon.find({}).toArray();
   res.json(all);
 });
 
+// get trainer by username
 app.get("/trainer", async (req, res) => {
   const username = req.query.username;
 
@@ -31,6 +34,7 @@ app.get("/trainer", async (req, res) => {
   res.json(trainer);
 });
 
+// create or update trainer
 app.put("/trainer", async (req, res) => {
   try {
     const trainer = req.body;
@@ -54,6 +58,47 @@ app.put("/trainer", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Internal error" });
   }
+});
+
+// refresh battles for a trainer
+// get "new" status battles or battles where trainer is a participant
+// (either as trainer1 or trainer2)
+app.get("/battles/refresh", async (req, res) => {
+  const username = req.query.username;
+
+  if (!username) {
+    return res.status(400).json({ error: "username is required" });
+  }
+
+  const battles = await battles
+    .find({
+      $or: [{ status: "new" }, { trainer1: username }, { trainer2: username }],
+    })
+    .toArray();
+
+  res.json(battles);
+});
+
+// create a new battle
+// body is a trainer who is creating the battle
+app.post("/battles", async (req, res) => {
+  const trainer = req.body;
+
+  if (!trainer?.username) {
+    return res.status(400).json({ error: "username is required" });
+  }
+
+  const newBattle = {
+    status: "new",
+    trainer1: trainer.username,
+    trainer1team: trainer.team,
+    trainer2: "",
+    trainer2team: [],
+    turns: [],
+  };
+
+  const result = await battles.insertOne(newBattle);
+  res.json(newBattle);
 });
 
 async function start() {

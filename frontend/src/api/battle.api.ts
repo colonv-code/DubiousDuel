@@ -14,10 +14,10 @@ export interface PokemonStatus {
 
 export interface BattleTurn {
   turnNumber: number;
-  movingTeam: 1 | 2; // 1 for trainer1, 2 for trainer2
-  trainer1pokemon: number; // index of pokemon in trainer1team
-  trainer2pokemon: number; // index of pokemon in trainer2team
+  movingTrainer: 1 | 2; // 1 for trainer1, 2 for trainer2
   moveUsed: Move; // move used by the active pokemon
+  pokemon1: number; // index of pokemon in trainer1team
+  pokemon2: number; // index of pokemon in trainer2team
   team1status: PokemonStatus[]; // status of all pokemon in trainer1team
   team2status: PokemonStatus[]; // status of all pokemon in trainer2team
 }
@@ -25,9 +25,9 @@ export interface BattleTurn {
 export interface Battle {
   _id: string;
   status: BattleStatus;
-  trainer1username: string;
+  trainer1: string;
   trainer1team: Pokemon[];
-  trainer2username: string;
+  trainer2: string;
   trainer2team: Pokemon[];
   turns: BattleTurn[];
 }
