@@ -18,8 +18,8 @@ const battles = db.collection("Battles");
 
 // get all pokemon
 app.get("/pokemon", async (req, res) => {
-  const all = await pokemon.find({}).toArray();
-  res.json(all);
+  const result = await pokemon.find({}).toArray();
+  res.json(result);
 });
 
 // get trainer by username
@@ -30,8 +30,8 @@ app.get("/trainer", async (req, res) => {
     return res.status(400).json({ error: "username is required" });
   }
 
-  const trainer = await trainers.findOne({ username });
-  res.json(trainer);
+  const result = await trainers.findOne({ username });
+  res.json(result);
 });
 
 // create or update trainer
@@ -70,21 +70,21 @@ app.get("/battles/refresh", async (req, res) => {
     return res.status(400).json({ error: "username is required" });
   }
 
-  const battles = await battles
+  const result = await battles
     .find({
       $or: [{ status: "new" }, { trainer1: username }, { trainer2: username }],
     })
     .toArray();
 
-  res.json(battles);
+  res.json(result);
 });
 
 // create a new battle
 // body is a trainer who is creating the battle
 app.post("/battles", async (req, res) => {
-  const trainer = req.body;
+  const trainer = req.body.trainer;
 
-  if (!trainer?.username) {
+  if (!trainer.username) {
     return res.status(400).json({ error: "username is required" });
   }
 

@@ -1,4 +1,5 @@
 import type { Move, Pokemon } from "./pokemon.api";
+import type { Trainer } from "./trainer.api";
 
 export type BattleStatus =
   | "new"
@@ -30,4 +31,22 @@ export interface Battle {
   trainer2: string;
   trainer2team: Pokemon[];
   turns: BattleTurn[];
+}
+
+export async function getBattlesForTrainer(username: string) {
+  const res = await fetch(
+    `http://localhost:3001/battles/refresh?username=${username}`
+  );
+  return (await res.json()) as Battle[];
+}
+
+export async function startBattle(trainer: Trainer) {
+  const res = await fetch("http://localhost:3001/battles", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ trainer }),
+  });
+  return (await res.json()) as Battle;
 }
