@@ -1,5 +1,16 @@
-.trainerPage {
+.battlePage {
+
+    height: 100%;
+    margin: 16px;
+}
+
+.newBattleButton {
+    padding: 16px;
+}
+
+.battleList {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
 }

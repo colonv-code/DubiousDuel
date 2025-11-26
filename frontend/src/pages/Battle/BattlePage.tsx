@@ -6,6 +6,7 @@ import {
   startBattle,
   type Battle,
 } from "../../api/battle.api";
+import { BattleCard } from "./BattleCard";
 
 export interface BattlePageProps {
   trainer: Trainer | null;
@@ -17,6 +18,17 @@ export function BattlePage({ trainer }: BattlePageProps) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadedBattles, setLoadedBattles] = useState<Battle[]>([]);
+
+  const newBattles = loadedBattles.filter(
+    (battle) =>
+      battle.status === "new" &&
+      battle.trainer1 != trainer.username &&
+      battle.trainer2 != trainer.username
+  );
+  const yourBattles = loadedBattles.filter(
+    (battle) =>
+      battle.trainer1 == trainer.username || battle.trainer2 == trainer.username
+  );
 
   // load initial data
   useEffect(() => {
@@ -37,17 +49,46 @@ export function BattlePage({ trainer }: BattlePageProps) {
 
   return (
     <div className="battlePage">
-      <button onClick={onStartBattle}>Start New Battle</button>
+      <button className="newBattleButton" onClick={onStartBattle}>
+        Start New Battle
+      </button>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <ul>
-          {loadedBattles.map((battle) => (
-            <li key={battle._id}>
-              Battle ID: {battle._id}, Status: {battle.status}
-            </li>
-          ))}
-        </ul>
+        <>
+          {newBattles.length > 0 && (
+            <>
+              <p>Open Battles</p>
+              <div className="battleList">
+                {newBattles.map((battle) => (
+                  <BattleCard
+                    key={battle._id}
+                    trainer1={battle.trainer1}
+                    trainer2={battle.trainer2}
+                    status={battle.status}
+                    onClick={() => {}}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+          {yourBattles.length > 0 && (
+            <>
+              <p>Your Battles</p>
+              <div className="battleList">
+                {yourBattles.map((battle) => (
+                  <BattleCard
+                    key={battle._id}
+                    trainer1={battle.trainer1}
+                    trainer2={battle.trainer2}
+                    status={battle.status}
+                    onClick={() => {}}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </>
       )}
     </div>
   );

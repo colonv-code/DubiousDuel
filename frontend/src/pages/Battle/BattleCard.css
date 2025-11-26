@@ -1,0 +1,15 @@
+.battleCard {
+  border: 3px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  min-width: 200px;
+}
+
+.battleCard p {
+    margin: 0;
+}
