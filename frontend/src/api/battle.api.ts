@@ -50,3 +50,14 @@ export async function startBattle(trainer: Trainer) {
   });
   return (await res.json()) as Battle;
 }
+
+export async function acceptBattle(battleId: string, trainer: Trainer) {
+  const res = await fetch(`http://localhost:3001/battles/${battleId}/accept`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ trainer }),
+  });
+  return (await res.json()) as Battle;
+}

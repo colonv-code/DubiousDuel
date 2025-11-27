@@ -1,5 +1,5 @@
 import express from "express";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -99,6 +99,40 @@ app.post("/battles", async (req, res) => {
 
   const result = await battles.insertOne(newBattle);
   res.json(newBattle);
+});
+
+// accept/join a battle
+// body is a trainer who is joining the battle and battle id
+app.put("/battles/:battleId/accept", async (req, res) => {
+  const battleId = req.params.battleId;
+  const { trainer } = req.body;
+  if (!trainer.username) {
+    return res.status(400).json({ error: "username is required" });
+  }
+  if (!battleId) {
+    return res.status(400).json({ error: "battleId is required" });
+  }
+
+  const battle = await battles.findOne({ _id: new ObjectId(battleId) });
+
+  if (!battle) {
+    return res.status(404).json({ error: "battle not found" });
+  }
+  if (battle.trainer2) {
+    return res.status(400).json({ error: "battle already has two trainers" });
+  }
+  const updatedBattle = {
+    ...battle,
+    status: "trainer2turn",
+    trainer2: trainer.username,
+    trainer2team: trainer.team,
+  };
+
+  await battles.updateOne(
+    { _id: new ObjectId(battleId) },
+    { $set: updatedBattle }
+  );
+  res.json(updatedBattle);
 });
 
 async function start() {

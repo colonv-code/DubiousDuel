@@ -5,7 +5,7 @@ export interface BattleCardProps {
   trainer1: string;
   trainer2: string;
   status: BattleStatus;
-  onClick: () => void;
+  onClick: (() => void) | undefined;
 }
 
 export function BattleCard({

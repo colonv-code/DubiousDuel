@@ -7,6 +7,7 @@ import {
   type Battle,
 } from "../../api/battle.api";
 import { BattleCard } from "./BattleCard";
+import { useAcceptBattleModal } from "./useAcceptBattleModal";
 
 export interface BattlePageProps {
   trainer: Trainer | null;
@@ -30,6 +31,17 @@ export function BattlePage({ trainer }: BattlePageProps) {
       battle.trainer1 == trainer.username || battle.trainer2 == trainer.username
   );
 
+  // once the battle gets accepted, update the battle in the list
+  const handleBattleAccepted = (acceptedBattle: Battle) => {
+    setLoadedBattles((prev) =>
+      prev.map((battle) =>
+        battle._id === acceptedBattle._id ? acceptedBattle : battle
+      )
+    );
+  };
+
+  const acceptBattleModal = useAcceptBattleModal(trainer, handleBattleAccepted);
+
   // load initial data
   useEffect(() => {
     setIsLoading(true);
@@ -39,7 +51,7 @@ export function BattlePage({ trainer }: BattlePageProps) {
     });
   }, []);
 
-  const onStartBattle = () => {
+  const onStartNewBattleClick = () => {
     setIsLoading(true);
     startBattle(trainer).then((battle) => {
       setLoadedBattles((prev) => [...prev, battle]);
@@ -47,49 +59,69 @@ export function BattlePage({ trainer }: BattlePageProps) {
     });
   };
 
+  const createBattleClickHandler = (battle: Battle) => () => {
+    switch (battle.status) {
+      case "new":
+        // join battle
+        acceptBattleModal.openModal(battle);
+        break;
+      case "trainer1turn":
+      case "trainer2turn":
+        // go to battle page
+        break;
+    }
+  };
+
   return (
-    <div className="battlePage">
-      <button className="newBattleButton" onClick={onStartBattle}>
-        Start New Battle
-      </button>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {newBattles.length > 0 && (
-            <>
-              <p>Open Battles</p>
-              <div className="battleList">
-                {newBattles.map((battle) => (
-                  <BattleCard
-                    key={battle._id}
-                    trainer1={battle.trainer1}
-                    trainer2={battle.trainer2}
-                    status={battle.status}
-                    onClick={() => {}}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-          {yourBattles.length > 0 && (
-            <>
-              <p>Your Battles</p>
-              <div className="battleList">
-                {yourBattles.map((battle) => (
-                  <BattleCard
-                    key={battle._id}
-                    trainer1={battle.trainer1}
-                    trainer2={battle.trainer2}
-                    status={battle.status}
-                    onClick={() => {}}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </>
-      )}
-    </div>
+    <>
+      <div className="battlePage">
+        <button className="newBattleButton" onClick={onStartNewBattleClick}>
+          Start New Battle
+        </button>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {newBattles.length > 0 && (
+              <>
+                <p>Open Battles</p>
+                <div className="battleList">
+                  {newBattles.map((battle) => (
+                    <BattleCard
+                      key={battle._id}
+                      trainer1={battle.trainer1}
+                      trainer2={battle.trainer2}
+                      status={battle.status}
+                      onClick={createBattleClickHandler(battle)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+            {yourBattles.length > 0 && (
+              <>
+                <p>Your Battles</p>
+                <div className="battleList">
+                  {yourBattles.map((battle) => (
+                    <BattleCard
+                      key={battle._id}
+                      trainer1={battle.trainer1}
+                      trainer2={battle.trainer2}
+                      status={battle.status}
+                      onClick={
+                        battle.status !== "new"
+                          ? createBattleClickHandler(battle)
+                          : undefined
+                      }
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
+      {acceptBattleModal.children}
+    </>
   );
 }
