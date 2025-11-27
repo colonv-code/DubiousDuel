@@ -126,6 +126,18 @@ app.put("/battles/:battleId/accept", async (req, res) => {
     status: "trainer2turn",
     trainer2: trainer.username,
     trainer2team: trainer.team,
+    // initialize first turn, just sending out the first pokemon on each team
+    turns: [
+      {
+        turnNumber: 0,
+        movingTrainer: 1,
+        moveUsed: null,
+        pokemon1: 0,
+        pokemon2: 0,
+        team1status: battle.trainer1team.map((p) => ({ hp: parseInt(p.HP) })),
+        team2status: trainer.team.map((p) => ({ hp: parseInt(p.HP) })),
+      },
+    ],
   };
 
   await battles.updateOne(

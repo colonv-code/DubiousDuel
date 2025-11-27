@@ -16,7 +16,7 @@ export interface PokemonStatus {
 export interface BattleTurn {
   turnNumber: number;
   movingTrainer: 1 | 2; // 1 for trainer1, 2 for trainer2
-  moveUsed: Move; // move used by the active pokemon
+  moveUsed: Move | null; // move used by the active pokemon, null on first or switch out pokemon
   pokemon1: number; // index of pokemon in trainer1team
   pokemon2: number; // index of pokemon in trainer2team
   team1status: PokemonStatus[]; // status of all pokemon in trainer1team
