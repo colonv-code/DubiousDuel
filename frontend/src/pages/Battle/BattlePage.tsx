@@ -8,6 +8,7 @@ import {
 } from "../../api/battle.api";
 import { BattleCard } from "./BattleCard";
 import { useAcceptBattleModal } from "./useAcceptBattleModal";
+import { useBattleModal } from "./useBattleModal";
 
 export interface BattlePageProps {
   trainer: Trainer | null;
@@ -41,6 +42,7 @@ export function BattlePage({ trainer }: BattlePageProps) {
   };
 
   const acceptBattleModal = useAcceptBattleModal(trainer, handleBattleChanged);
+  const battleModal = useBattleModal(trainer, handleBattleChanged);
 
   const loadBattles = () => {
     setIsLoading(true);
@@ -65,12 +67,11 @@ export function BattlePage({ trainer }: BattlePageProps) {
   const createBattleClickHandler = (battle: Battle) => () => {
     switch (battle.status) {
       case "new":
-        // join battle
         acceptBattleModal.openModal(battle);
         break;
       case "trainer1turn":
       case "trainer2turn":
-        // go to battle page
+        battleModal.openModal(battle);
         break;
     }
   };
@@ -130,6 +131,7 @@ export function BattlePage({ trainer }: BattlePageProps) {
         )}
       </div>
       {acceptBattleModal.children}
+      {battleModal.children}
     </>
   );
 }
