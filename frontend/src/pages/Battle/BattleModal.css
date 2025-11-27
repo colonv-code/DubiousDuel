@@ -30,6 +30,19 @@
     gap: 20px;
 }
 
+.battleActionContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.battleActionContainer button {
+    padding: 16px;
+}
+
 .movesContainer {
     display: flex;
     flex-direction: column;

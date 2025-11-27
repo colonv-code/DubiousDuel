@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Battle } from "../../api/battle.api";
 import type { Trainer } from "../../api/trainer.api";
 import { BattleModal } from "./BattleModal";
+import type { Move } from "../../api/pokemon.api";
 
 export function useBattleModal(
   trainer: Trainer,
@@ -10,26 +11,54 @@ export function useBattleModal(
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [battle, setBattle] = useState<Battle | null>(null);
 
-  const [selectedMoveName, setSelectedMoveName] = useState<string | null>(
-    "Ice Punch"
-  );
+  const [selectedMoveName, setSelectedMoveName] = useState<string | null>(null);
   const [selectedPokemonIndex, setSelectedPokemonIndex] = useState<
     number | null
   >(null);
+  const [turnMessage, setTurnMessage] = useState<string | null>(null);
+
+  const openModal = (battleToAccept: Battle) => {
+    setBattle(battleToAccept);
+    setIsVisible(true);
+  };
+
+  if (!battle) {
+    return { children: null, openModal };
+  }
+
+  // Compute battle-derived values only when battle exists
+  const latestTurn = battle.turns[battle.turns.length - 1];
+  const pokemon1 = battle.trainer1team[latestTurn.pokemon1];
+  const pokemon2 = battle.trainer2team[latestTurn.pokemon2];
+
+  const isTrainer1 = battle.trainer1 === trainer.username;
+  const isYourTurn =
+    (battle.status === "trainer1turn" && isTrainer1) ||
+    (battle.status === "trainer2turn" && !isTrainer1);
+
+  const yourPokemon = isTrainer1 ? pokemon1 : pokemon2;
+  const yourPokemonIndex = isTrainer1
+    ? latestTurn.pokemon1
+    : latestTurn.pokemon2;
+
+  // Filter out non-damaging moves
+  const filteredMoves = Object.entries(yourPokemon.Moves).filter(
+    ([, move]) => move.Power !== "--" && move.Power !== "??"
+  );
+
+  const yourTeam = isTrainer1 ? battle.trainer1team : battle.trainer2team;
 
   const handleMoveSelected = (moveName: string) => {
     setSelectedMoveName(moveName);
     setSelectedPokemonIndex(null);
+    setTurnMessage(`${yourPokemon.Name} will use ${moveName}!`);
   };
 
   const handlePokemonSelected = (pokemonIndex: number) => {
     setSelectedPokemonIndex(pokemonIndex);
     setSelectedMoveName(null);
-  };
-
-  const openModal = (battleToAccept: Battle) => {
-    setBattle(battleToAccept);
-    setIsVisible(true);
+    const newPokemonName = yourTeam[pokemonIndex].Name;
+    setTurnMessage(`Switch to ${newPokemonName}!`);
   };
 
   const handleClose = () => {
@@ -46,14 +75,46 @@ export function useBattleModal(
     }
   };
 
+  // For Later Implementation of turn logic
+  //   const newTurn: BattleTurn = {
+  //     turnNumber: battle.turns.length,
+  //     movingTrainer: isTrainer1 ? 1 : 2,
+  //     moveUsed: selectedMoveName,
+  //     pokemon1: isTrainer1
+  //       ? selectedPokemonIndex !== null
+  //         ? selectedPokemonIndex
+  //         : latestTurn.pokemon1
+  //       : latestTurn.pokemon1,
+  //     pokemon2: !isTrainer1
+  //       ? selectedPokemonIndex !== null
+  //         ? selectedPokemonIndex
+  //         : latestTurn.pokemon2
+  //       : latestTurn.pokemon2,
+  //     team1status: latestTurn.team1status,
+  //     team2status: latestTurn.team2status,
+  //   };
+
   return {
     children: (
       <BattleModal
-        battle={battle!}
-        trainer={trainer}
         visible={isVisible}
+        isYourTurn={isYourTurn}
+        isTrainer1={isTrainer1}
+        trainer1={battle.trainer1}
+        trainer2={battle.trainer2}
+        pokemon1Name={pokemon1.Name}
+        pokemon2Name={pokemon2.Name}
+        pokemon1index={latestTurn.pokemon1}
+        pokemon2index={latestTurn.pokemon2}
+        team1status={latestTurn.team1status}
+        team2status={latestTurn.team2status}
+        yourPokemon={yourPokemon}
+        yourPokemonIndex={yourPokemonIndex}
+        yourTeam={yourTeam}
+        yourMoves={filteredMoves as [string, Move][]}
         selectedMoveName={selectedMoveName}
         selectedPokemonIndex={selectedPokemonIndex}
+        turnMessage={turnMessage}
         onMoveSelected={handleMoveSelected}
         onPokemonSelected={handlePokemonSelected}
         onClose={handleClose}
