@@ -32,23 +32,26 @@ export function BattlePage({ trainer }: BattlePageProps) {
   );
 
   // once the battle gets accepted, update the battle in the list
-  const handleBattleAccepted = (acceptedBattle: Battle) => {
+  const handleBattleChanged = (changedBattle: Battle) => {
     setLoadedBattles((prev) =>
       prev.map((battle) =>
-        battle._id === acceptedBattle._id ? acceptedBattle : battle
+        battle._id === changedBattle._id ? changedBattle : battle
       )
     );
   };
 
-  const acceptBattleModal = useAcceptBattleModal(trainer, handleBattleAccepted);
+  const acceptBattleModal = useAcceptBattleModal(trainer, handleBattleChanged);
 
-  // load initial data
-  useEffect(() => {
+  const loadBattles = () => {
     setIsLoading(true);
     getBattlesForTrainer(trainer.username).then((battles) => {
       setLoadedBattles(battles);
       setIsLoading(false);
     });
+  };
+
+  useEffect(() => {
+    loadBattles();
   }, []);
 
   const onStartNewBattleClick = () => {
@@ -75,9 +78,14 @@ export function BattlePage({ trainer }: BattlePageProps) {
   return (
     <>
       <div className="battlePage">
-        <button className="newBattleButton" onClick={onStartNewBattleClick}>
-          Start New Battle
-        </button>
+        <div className="battleHeader">
+          <button className="battleButton" onClick={onStartNewBattleClick}>
+            Start New Battle
+          </button>
+          <button className="battleButton" onClick={loadBattles}>
+            Refresh Battles
+          </button>
+        </div>
         {isLoading ? (
           <p>Loading...</p>
         ) : (

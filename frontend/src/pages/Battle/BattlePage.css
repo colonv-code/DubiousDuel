@@ -4,7 +4,14 @@
     margin: 16px;
 }
 
-.newBattleButton {
+.battleHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.battleButton {
     padding: 16px;
 }
 
