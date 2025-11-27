@@ -41,11 +41,6 @@ export function useBattleModal(
     ? latestTurn.pokemon1
     : latestTurn.pokemon2;
 
-  // Filter out non-damaging moves
-  const filteredMoves = Object.entries(yourPokemon.Moves).filter(
-    ([, move]) => move.Power !== "--" && move.Power !== "??"
-  );
-
   const yourTeam = isTrainer1 ? battle.trainer1team : battle.trainer2team;
 
   const handleMoveSelected = (moveName: string) => {
@@ -111,7 +106,7 @@ export function useBattleModal(
         yourPokemon={yourPokemon}
         yourPokemonIndex={yourPokemonIndex}
         yourTeam={yourTeam}
-        yourMoves={filteredMoves as [string, Move][]}
+        yourMoves={yourPokemon.Moves}
         selectedMoveName={selectedMoveName}
         selectedPokemonIndex={selectedPokemonIndex}
         turnMessage={turnMessage}

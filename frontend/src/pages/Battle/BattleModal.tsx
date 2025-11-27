@@ -19,7 +19,7 @@ export interface BattleModalProps {
   yourPokemon: Pokemon;
   yourPokemonIndex: number;
   yourTeam: Pokemon[];
-  yourMoves: [string, Move][];
+  yourMoves: Record<string, Move>;
   selectedMoveName: string | null;
   selectedPokemonIndex: number | null;
   turnMessage: string | null;
@@ -76,15 +76,16 @@ export function BattleModal({
         <div className="battleSideContainer">
           <p>{yourPokemon.Name}'s Moves</p>
           <div className="movesContainer">
-            {yourMoves.map(([moveName, move]) => (
+            {Object.entries(yourMoves).map(([moveName, move]) => (
               <div
                 className={`moveRow ${
                   selectedMoveName === moveName ? "selectedMove" : ""
                 }`}
                 key={moveName}
                 onClick={createMoveSelectedHandler(moveName)}
+                title={move.Description}
               >
-                {moveName}: {move.Power}
+                {moveName}: {move.Power} Power, {move.Accuracy}% Accuracy
               </div>
             ))}
           </div>
