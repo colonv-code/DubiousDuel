@@ -9,7 +9,7 @@ How to make this work
 3. Create .env.local with the following:
 4. `MONGO_URI=<connection uri>`
 5. new terminal > `cd backend`
-6. `npm install` > `node server.js`
+6. `npm install` > `npm run dev`
 7. should get "API running on :3001". keep this terminal running
 8. new terminal > `cd frontend`
 9. `npm install` > `npm run dev`

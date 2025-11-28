@@ -1,7 +1,8 @@
-import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
+import express, { Request, Response } from "express";
+import { MongoClient, ObjectId, Collection } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
+import { Battle, Pokemon, Trainer } from "./models";
 
 dotenv.config({ path: "../.env.local" });
 
@@ -10,21 +11,26 @@ app.use(cors());
 app.use(express.json());
 
 // Load URI from environment
-const client = new MongoClient(process.env.MONGO_URI);
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+  throw new Error("MONGO_URI environment variable is not set");
+}
+
+const client = new MongoClient(mongoUri);
 const db = client.db("DubiousDuel");
-const pokemon = db.collection("Pokemon");
-const trainers = db.collection("Trainers");
-const battles = db.collection("Battles");
+const pokemon: Collection<Pokemon> = db.collection("Pokemon");
+const trainers: Collection<Trainer> = db.collection("Trainers");
+const battles: Collection<Battle> = db.collection("Battles");
 
 // get all pokemon
-app.get("/pokemon", async (req, res) => {
+app.get("/pokemon", async (req: Request, res: Response) => {
   const result = await pokemon.find({}).toArray();
   res.json(result);
 });
 
 // get trainer by username
-app.get("/trainer", async (req, res) => {
-  const username = req.query.username;
+app.get("/trainer", async (req: Request, res: Response) => {
+  const username = req.query.username as string;
 
   if (!username) {
     return res.status(400).json({ error: "username is required" });
@@ -35,15 +41,15 @@ app.get("/trainer", async (req, res) => {
 });
 
 // create or update trainer
-app.put("/trainer", async (req, res) => {
+app.put("/trainer", async (req: Request, res: Response) => {
   try {
-    const trainer = req.body;
+    const trainer = req.body as Trainer;
 
     if (!trainer?.username) {
       return res.status(400).json({ error: "username is required" });
     }
 
-    if (!trainer.team.length > 6) {
+    if (trainer.team.length > 6) {
       return res.status(400).json({ error: "too many pokemon" });
     }
 
@@ -63,8 +69,8 @@ app.put("/trainer", async (req, res) => {
 // refresh battles for a trainer
 // get "new" status battles or battles where trainer is a participant
 // (either as trainer1 or trainer2)
-app.get("/battles/refresh", async (req, res) => {
-  const username = req.query.username;
+app.get("/battles/refresh", async (req: Request, res: Response) => {
+  const username = req.query.username as string;
 
   if (!username) {
     return res.status(400).json({ error: "username is required" });
@@ -81,14 +87,14 @@ app.get("/battles/refresh", async (req, res) => {
 
 // create a new battle
 // body is a trainer who is creating the battle
-app.post("/battles", async (req, res) => {
-  const trainer = req.body.trainer;
+app.post("/battles", async (req: Request, res: Response) => {
+  const trainer = req.body.trainer as Trainer;
 
   if (!trainer.username) {
     return res.status(400).json({ error: "username is required" });
   }
 
-  const newBattle = {
+  const newBattle: Battle = {
     status: "new",
     trainer1: trainer.username,
     trainer1team: trainer.team,
@@ -103,9 +109,9 @@ app.post("/battles", async (req, res) => {
 
 // accept/join a battle
 // body is a trainer who is joining the battle and battle id
-app.put("/battles/:battleId/accept", async (req, res) => {
+app.put("/battles/:battleId/accept", async (req: Request, res: Response) => {
   const battleId = req.params.battleId;
-  const { trainer } = req.body;
+  const { trainer } = req.body as { trainer: Trainer };
   if (!trainer.username) {
     return res.status(400).json({ error: "username is required" });
   }
@@ -121,7 +127,7 @@ app.put("/battles/:battleId/accept", async (req, res) => {
   if (battle.trainer2) {
     return res.status(400).json({ error: "battle already has two trainers" });
   }
-  const updatedBattle = {
+  const updatedBattle: Battle = {
     ...battle,
     status: "trainer2turn",
     trainer2: trainer.username,
@@ -134,8 +140,10 @@ app.put("/battles/:battleId/accept", async (req, res) => {
         moveUsed: null,
         pokemon1: 0,
         pokemon2: 0,
-        team1status: battle.trainer1team.map((p) => ({ hp: parseInt(p.HP) })),
-        team2status: trainer.team.map((p) => ({ hp: parseInt(p.HP) })),
+        team1status: battle.trainer1team.map((p: Pokemon) => ({
+          hp: parseInt(p.HP),
+        })),
+        team2status: trainer.team.map((p: Pokemon) => ({ hp: parseInt(p.HP) })),
       },
     ],
   };
