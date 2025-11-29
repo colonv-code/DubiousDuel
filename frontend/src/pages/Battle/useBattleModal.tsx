@@ -2,7 +2,6 @@ import { useState } from "react";
 import type { Battle } from "../../api/battle.api";
 import type { Trainer } from "../../api/trainer.api";
 import { BattleModal } from "./BattleModal";
-import type { Move } from "../../api/pokemon.api";
 
 export function useBattleModal(
   trainer: Trainer,

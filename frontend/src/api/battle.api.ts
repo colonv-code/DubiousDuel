@@ -1,4 +1,4 @@
-import type { Move, Pokemon } from "./pokemon.api";
+import type { Pokemon } from "./pokemon.api";
 import type { Trainer } from "./trainer.api";
 
 export type BattleStatus =
