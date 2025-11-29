@@ -1,5 +1,9 @@
 import { useState } from "react";
-import type { Battle } from "../../api/battle.api";
+import {
+  processTurn,
+  type Battle,
+  type BattleTurnRequest,
+} from "../../api/battle.api";
 import type { Trainer } from "../../api/trainer.api";
 import { BattleModal } from "./BattleModal";
 
@@ -64,29 +68,29 @@ export function useBattleModal(
 
   const handleTurnComplete = () => {
     if (battle) {
-      // todo: complete turn api call
-      onAccepted(battle);
+      const turnRequest: BattleTurnRequest = {
+        movingTrainer: isTrainer1 ? 1 : 2,
+        moveUsed: selectedMoveName,
+        pokemon1: isTrainer1
+          ? selectedPokemonIndex !== null
+            ? selectedPokemonIndex
+            : latestTurn.pokemon1
+          : latestTurn.pokemon1,
+        pokemon2: !isTrainer1
+          ? selectedPokemonIndex !== null
+            ? selectedPokemonIndex
+            : latestTurn.pokemon2
+          : latestTurn.pokemon2,
+      };
+      processTurn(battle._id, turnRequest).then((updatedBattle) => {
+        setBattle(updatedBattle);
+        onAccepted(updatedBattle);
+        setSelectedMoveName(null);
+        setSelectedPokemonIndex(null);
+        setTurnMessage(null);
+      });
     }
   };
-
-  // For Later Implementation of turn logic
-  //   const newTurn: BattleTurn = {
-  //     turnNumber: battle.turns.length,
-  //     movingTrainer: isTrainer1 ? 1 : 2,
-  //     moveUsed: selectedMoveName,
-  //     pokemon1: isTrainer1
-  //       ? selectedPokemonIndex !== null
-  //         ? selectedPokemonIndex
-  //         : latestTurn.pokemon1
-  //       : latestTurn.pokemon1,
-  //     pokemon2: !isTrainer1
-  //       ? selectedPokemonIndex !== null
-  //         ? selectedPokemonIndex
-  //         : latestTurn.pokemon2
-  //       : latestTurn.pokemon2,
-  //     team1status: latestTurn.team1status,
-  //     team2status: latestTurn.team2status,
-  //   };
 
   return {
     children: (

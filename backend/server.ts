@@ -117,7 +117,7 @@ app.post("/battles", async (req: Request, res: Response) => {
 // body is a trainer who is joining the battle and battle id
 app.put("/battles/:battleId/accept", async (req: Request, res: Response) => {
   const battleId = req.params.battleId;
-  const { trainer } = req.body as { trainer: Trainer };
+  const trainer = req.body as Trainer;
   if (!trainer.username) {
     return res.status(400).json({ error: "username is required" });
   }
@@ -165,7 +165,7 @@ app.put("/battles/:battleId/accept", async (req: Request, res: Response) => {
 // body is the turn data
 app.put("/battles/:battleId/turn", async (req: Request, res: Response) => {
   const battleId = req.params.battleId;
-  const { turnRequest } = req.body as { turnRequest: BattleTurnRequest };
+  const turnRequest = req.body as BattleTurnRequest;
 
   if (!battleId) {
     return res.status(400).json({ error: "battleId is required" });

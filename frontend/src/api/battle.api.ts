@@ -33,6 +33,17 @@ export interface Battle {
   turns: BattleTurn[];
 }
 
+// For when a turn is sent from frontend to backend
+// the status of the team will be calculated on the backend
+// based on the moves used and other factors
+// so that the frontend cannot calculate it incorrectly or cheat
+export interface BattleTurnRequest {
+  movingTrainer: 1 | 2; // 1 for trainer1, 2 for trainer2
+  moveUsed: string | null; // move used by the active pokemon, null on first or switch out pokemon
+  pokemon1: number; // index of pokemon in trainer1team
+  pokemon2: number; // index of pokemon in trainer2team
+}
+
 export async function getBattlesForTrainer(username: string) {
   const res = await fetch(
     `http://localhost:3001/battles/refresh?username=${username}`
@@ -58,6 +69,20 @@ export async function acceptBattle(battleId: string, trainer: Trainer) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ trainer }),
+  });
+  return (await res.json()) as Battle;
+}
+
+export async function processTurn(
+  battleId: string,
+  turnRequest: BattleTurnRequest
+) {
+  const res = await fetch(`http://localhost:3001/battles/${battleId}/turn`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(turnRequest),
   });
   return (await res.json()) as Battle;
 }
