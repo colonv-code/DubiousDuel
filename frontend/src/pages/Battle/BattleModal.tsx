@@ -23,6 +23,7 @@ export interface BattleModalProps {
   selectedMoveName: string | null;
   selectedPokemonIndex: number | null;
   turnMessage: string | null;
+  latestTurnMessage: string | null;
   onClose: () => void;
   onMoveSelected: (moveName: string) => void;
   onPokemonSelected: (pokemonIndex: number) => void;
@@ -48,6 +49,7 @@ export function BattleModal({
   selectedMoveName,
   selectedPokemonIndex,
   turnMessage,
+  latestTurnMessage,
   onClose,
   onMoveSelected,
   onPokemonSelected,
@@ -107,6 +109,7 @@ export function BattleModal({
           <p>
             {trainer1} vs. {trainer2}
           </p>
+          {latestTurnMessage && <p>{latestTurnMessage}</p>}
           {isYourTurn && (
             <p>Your turn! Choose a move or switch your pokemon.</p>
           )}

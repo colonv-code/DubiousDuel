@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   processTurn,
   type Battle,
@@ -19,11 +19,36 @@ export function useBattleModal(
     number | null
   >(null);
   const [turnMessage, setTurnMessage] = useState<string | null>(null);
+  const [latestTurnMessage, setLatestTurnMessage] = useState<string | null>(
+    null
+  );
 
   const openModal = (battleToAccept: Battle) => {
     setBattle(battleToAccept);
     setIsVisible(true);
   };
+
+  useEffect(() => {
+    // update latest turn message
+    // length greater than 1 cuz first turn is just initialization
+    if (battle && battle.turns.length > 1) {
+      const latestTurn = battle.turns[battle.turns.length - 1];
+
+      const trainerName =
+        latestTurn.movingTrainer === 1 ? battle.trainer1 : battle.trainer2;
+
+      const pokemonName =
+        latestTurn.movingTrainer === 1
+          ? battle.trainer1team[latestTurn.pokemon1].Name
+          : battle.trainer2team[latestTurn.pokemon2].Name;
+
+      setLatestTurnMessage(
+        latestTurn.moveUsed === null
+          ? `${trainerName} switched to ${pokemonName}!`
+          : `${trainerName}'s ${pokemonName} used ${latestTurn.moveUsed}!`
+      );
+    }
+  }, [battle]);
 
   if (!battle) {
     return { children: null, openModal };
@@ -113,6 +138,7 @@ export function useBattleModal(
         selectedMoveName={selectedMoveName}
         selectedPokemonIndex={selectedPokemonIndex}
         turnMessage={turnMessage}
+        latestTurnMessage={latestTurnMessage}
         onMoveSelected={handleMoveSelected}
         onPokemonSelected={handlePokemonSelected}
         onClose={handleClose}
