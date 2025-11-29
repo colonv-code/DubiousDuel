@@ -117,7 +117,8 @@ app.post("/battles", async (req: Request, res: Response) => {
 // body is a trainer who is joining the battle and battle id
 app.put("/battles/:battleId/accept", async (req: Request, res: Response) => {
   const battleId = req.params.battleId;
-  const trainer = req.body as Trainer;
+  const trainer = req.body.trainer as Trainer;
+
   if (!trainer.username) {
     return res.status(400).json({ error: "username is required" });
   }
