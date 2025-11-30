@@ -17,11 +17,15 @@ export function BattleCard({
   return (
     <div className="battleCard" onClick={onClick}>
       <p>
-        {trainer1} {status === "trainer1turn" && "←"}
+        {trainer1}
+        {status === "trainer1turn" && " ←"}
+        {status === "trainer1win" && " 👑"}
       </p>
       <p>vs.</p>
       <p>
-        {trainer2 || "???"} {status === "trainer2turn" && "←"}
+        {trainer2 || "???"}
+        {status === "trainer2turn" && " ←"}
+        {status === "trainer2win" && " 👑"}
       </p>
     </div>
   );

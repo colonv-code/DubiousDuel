@@ -71,6 +71,8 @@ export function BattlePage({ trainer }: BattlePageProps) {
         break;
       case "trainer1turn":
       case "trainer2turn":
+      case "trainer1win":
+      case "trainer2win":
         battleModal.openModal(battle);
         break;
     }

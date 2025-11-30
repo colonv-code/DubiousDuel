@@ -26,6 +26,7 @@ export interface BattleModalProps {
   turnMessage: string | null;
   latestTurnMessage: string | null;
   justFainted: boolean;
+  winningTrainer: string | null;
   onClose: () => void;
   onMoveSelected: (moveName: string) => void;
   onPokemonSelected: (pokemonIndex: number) => void;
@@ -54,6 +55,7 @@ export function BattleModal({
   turnMessage,
   latestTurnMessage,
   justFainted,
+  winningTrainer,
   onClose,
   onMoveSelected,
   onPokemonSelected,
@@ -80,42 +82,44 @@ export function BattleModal({
           isTrainer1 ? "battleModalTrainer1" : "battleModalTrainer2"
         }`}
       >
-        <div className="battleSideContainer">
-          <p>
-            {justFainted && selectedPokemonIndex !== null
-              ? yourTeam[selectedPokemonIndex].Name
-              : yourPokemon.Name}
-            's Moves
-          </p>
-          <div className="movesContainer">
-            {Object.entries(yourMoves).map(([moveName, move]) => (
-              <div
-                className={`moveRow ${
-                  selectedMoveName === moveName ? "selectedMove" : ""
-                }`}
-                key={moveName}
-                onClick={createMoveSelectedHandler(moveName)}
-                title={move.Description}
-              >
-                {moveName}: {move.Power} Power, {move.Accuracy}% Accuracy
-              </div>
-            ))}
-          </div>
-          <p>Your Team</p>
-          <div className="teamContainer">
-            {yourTeam.map((pokemon, index) => (
-              <img
-                src={nameToImageUri(pokemon.Name)}
-                className={`teamPokemon ${
-                  selectedPokemonIndex === index ? "selectedPokemon" : ""
-                } 
+        {winningTrainer === null && (
+          <div className="battleSideContainer">
+            <p>
+              {justFainted && selectedPokemonIndex !== null
+                ? yourTeam[selectedPokemonIndex].Name
+                : yourPokemon.Name}
+              's Moves
+            </p>
+            <div className="movesContainer">
+              {Object.entries(yourMoves).map(([moveName, move]) => (
+                <div
+                  className={`moveRow ${
+                    selectedMoveName === moveName ? "selectedMove" : ""
+                  }`}
+                  key={moveName}
+                  onClick={createMoveSelectedHandler(moveName)}
+                  title={move.Description}
+                >
+                  {moveName}: {move.Power} Power, {move.Accuracy}% Accuracy
+                </div>
+              ))}
+            </div>
+            <p>Your Team</p>
+            <div className="teamContainer">
+              {yourTeam.map((pokemon, index) => (
+                <img
+                  src={nameToImageUri(pokemon.Name)}
+                  className={`teamPokemon ${
+                    selectedPokemonIndex === index ? "selectedPokemon" : ""
+                  } 
                 ${yourPokemonIndex === index ? "activePokemon" : ""}
                 ${yourStatus[index].hp <= 0 ? "faintedPokemon" : ""}`}
-                onClick={createPokemonSelectedHandler(pokemon, index)}
-              />
-            ))}
+                  onClick={createPokemonSelectedHandler(pokemon, index)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         <div className="battleCenterContainer">
           <p>
             {trainer1} vs. {trainer2}
@@ -128,6 +132,7 @@ export function BattleModal({
                 : "Your turn! Choose a move or switch your pokemon."}
             </p>
           )}
+          {winningTrainer && <p>🏆 {winningTrainer} has won the battle! 🏆</p>}
           <div className="battlePokemonContainer">
             <div style={{ flexDirection: "column" }}>
               <img

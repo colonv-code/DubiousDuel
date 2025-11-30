@@ -27,6 +27,7 @@ export function useBattleModal(
     string,
     Move
   > | null>(null);
+  const [winningTrainer, setWinningTrainer] = useState<string | null>(null);
 
   const openModal = (battleToAccept: Battle) => {
     setBattle(battleToAccept);
@@ -52,6 +53,13 @@ export function useBattleModal(
           ? `${trainerName} switched to ${pokemonName}!`
           : `${trainerName}'s ${pokemonName} used ${latestTurn.moveUsed}!`
       );
+
+      // check for win condition
+      if (battle.status === "trainer1win") {
+        setWinningTrainer(battle.trainer1);
+      } else if (battle.status === "trainer2win") {
+        setWinningTrainer(battle.trainer2);
+      }
     }
   }, [battle]);
 
@@ -167,6 +175,7 @@ export function useBattleModal(
         turnMessage={turnMessage}
         latestTurnMessage={latestTurnMessage}
         justFainted={justFainted}
+        winningTrainer={winningTrainer}
         onMoveSelected={handleMoveSelected}
         onPokemonSelected={handlePokemonSelected}
         onClose={handleClose}
