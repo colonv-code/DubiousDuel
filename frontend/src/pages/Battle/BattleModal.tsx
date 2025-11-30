@@ -20,10 +20,12 @@ export interface BattleModalProps {
   yourPokemonIndex: number;
   yourTeam: Pokemon[];
   yourMoves: Record<string, Move>;
+  yourStatus: PokemonStatus[];
   selectedMoveName: string | null;
   selectedPokemonIndex: number | null;
   turnMessage: string | null;
   latestTurnMessage: string | null;
+  justFainted: boolean;
   onClose: () => void;
   onMoveSelected: (moveName: string) => void;
   onPokemonSelected: (pokemonIndex: number) => void;
@@ -46,10 +48,12 @@ export function BattleModal({
   yourPokemonIndex,
   yourTeam,
   yourMoves,
+  yourStatus,
   selectedMoveName,
   selectedPokemonIndex,
   turnMessage,
   latestTurnMessage,
+  justFainted,
   onClose,
   onMoveSelected,
   onPokemonSelected,
@@ -64,6 +68,7 @@ export function BattleModal({
   const createPokemonSelectedHandler =
     (pokemon: Pokemon, pokemonIndex: number) => () => {
       if (pokemon === yourPokemon) return; // can't select the active pokemon
+      if (yourStatus[pokemonIndex].hp <= 0) return; // can't select a fainted pokemon
       onPokemonSelected(pokemonIndex);
     };
 
@@ -76,7 +81,12 @@ export function BattleModal({
         }`}
       >
         <div className="battleSideContainer">
-          <p>{yourPokemon.Name}'s Moves</p>
+          <p>
+            {justFainted && selectedPokemonIndex !== null
+              ? yourTeam[selectedPokemonIndex].Name
+              : yourPokemon.Name}
+            's Moves
+          </p>
           <div className="movesContainer">
             {Object.entries(yourMoves).map(([moveName, move]) => (
               <div
@@ -99,7 +109,8 @@ export function BattleModal({
                 className={`teamPokemon ${
                   selectedPokemonIndex === index ? "selectedPokemon" : ""
                 } 
-                ${yourPokemonIndex === index ? "activePokemon" : ""}`}
+                ${yourPokemonIndex === index ? "activePokemon" : ""}
+                ${yourStatus[index].hp <= 0 ? "faintedPokemon" : ""}`}
                 onClick={createPokemonSelectedHandler(pokemon, index)}
               />
             ))}
@@ -111,15 +122,29 @@ export function BattleModal({
           </p>
           {latestTurnMessage && <p>{latestTurnMessage}</p>}
           {isYourTurn && (
-            <p>Your turn! Choose a move or switch your pokemon.</p>
+            <p>
+              {justFainted
+                ? "Your Pokemon just fainted! Choose a new Pokemon, and have them move."
+                : "Your turn! Choose a move or switch your pokemon."}
+            </p>
           )}
           <div className="battlePokemonContainer">
             <div style={{ flexDirection: "column" }}>
-              <img src={nameToImageUri(pokemon1Name)} />
+              <img
+                className={
+                  team1status[pokemon1index].hp <= 0 ? "faintedPokemon" : ""
+                }
+                src={nameToImageUri(pokemon1Name)}
+              />
               <p>HP: {team1status[pokemon1index].hp}</p>
             </div>
             <div style={{ flexDirection: "column" }}>
-              <img src={nameToImageUri(pokemon2Name)} />
+              <img
+                className={
+                  team2status[pokemon2index].hp <= 0 ? "faintedPokemon" : ""
+                }
+                src={nameToImageUri(pokemon2Name)}
+              />
               <p>HP: {team2status[pokemon2index].hp}</p>
             </div>
           </div>

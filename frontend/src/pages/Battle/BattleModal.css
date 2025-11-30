@@ -95,3 +95,7 @@
     border: 3px solid #ccc;
     cursor: default;
 }
+.faintedPokemon {
+    opacity: 0.5;
+    cursor: default;
+}

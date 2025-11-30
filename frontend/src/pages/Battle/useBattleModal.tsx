@@ -6,6 +6,7 @@ import {
 } from "../../api/battle.api";
 import type { Trainer } from "../../api/trainer.api";
 import { BattleModal } from "./BattleModal";
+import type { Move } from "../../api/pokemon.api";
 
 export function useBattleModal(
   trainer: Trainer,
@@ -22,6 +23,10 @@ export function useBattleModal(
   const [latestTurnMessage, setLatestTurnMessage] = useState<string | null>(
     null
   );
+  const [effectiveMoves, setEffectiveMoves] = useState<Record<
+    string,
+    Move
+  > | null>(null);
 
   const openModal = (battleToAccept: Battle) => {
     setBattle(battleToAccept);
@@ -70,18 +75,39 @@ export function useBattleModal(
     : latestTurn.pokemon2;
 
   const yourTeam = isTrainer1 ? battle.trainer1team : battle.trainer2team;
+  const yourStatus = isTrainer1
+    ? latestTurn.team1status
+    : latestTurn.team2status;
+
+  const justFainted = yourStatus[yourPokemonIndex].hp <= 0;
 
   const handleMoveSelected = (moveName: string) => {
     setSelectedMoveName(moveName);
-    setSelectedPokemonIndex(null);
-    setTurnMessage(`${yourPokemon.Name} will use ${moveName}!`);
+    if (justFainted) {
+      if (selectedPokemonIndex !== null) {
+        setTurnMessage(
+          `Switch to ${yourTeam[selectedPokemonIndex].Name} and use ${moveName}!`
+        );
+      }
+    } else {
+      setSelectedPokemonIndex(null);
+      setTurnMessage(`${yourPokemon.Name} will use ${moveName}!`);
+    }
   };
 
   const handlePokemonSelected = (pokemonIndex: number) => {
     setSelectedPokemonIndex(pokemonIndex);
     setSelectedMoveName(null);
     const newPokemonName = yourTeam[pokemonIndex].Name;
-    setTurnMessage(`Switch to ${newPokemonName}!`);
+
+    if (justFainted) {
+      // when just fainted you switch AND move in one turn
+      // so set effective moves to the new pokemon's moves
+      setEffectiveMoves(yourTeam[pokemonIndex].Moves);
+      setTurnMessage(null);
+    } else {
+      setTurnMessage(`Switch to ${newPokemonName}!`);
+    }
   };
 
   const handleClose = () => {
@@ -134,11 +160,13 @@ export function useBattleModal(
         yourPokemon={yourPokemon}
         yourPokemonIndex={yourPokemonIndex}
         yourTeam={yourTeam}
-        yourMoves={yourPokemon.Moves}
+        yourMoves={effectiveMoves ?? yourPokemon.Moves}
+        yourStatus={yourStatus}
         selectedMoveName={selectedMoveName}
         selectedPokemonIndex={selectedPokemonIndex}
         turnMessage={turnMessage}
         latestTurnMessage={latestTurnMessage}
+        justFainted={justFainted}
         onMoveSelected={handleMoveSelected}
         onPokemonSelected={handlePokemonSelected}
         onClose={handleClose}
