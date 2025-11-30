@@ -59,6 +59,8 @@ export function useBattleModal(
         setWinningTrainer(battle.trainer1);
       } else if (battle.status === "trainer2win") {
         setWinningTrainer(battle.trainer2);
+      } else {
+        setWinningTrainer(null);
       }
     }
   }, [battle]);
