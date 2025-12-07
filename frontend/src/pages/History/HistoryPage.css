@@ -1,0 +1,8 @@
+.historyPage {
+  padding: 16px;
+}
+
+.historyList {
+  display: flex;
+  flex-wrap: wrap;
+}

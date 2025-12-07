@@ -1,0 +1,26 @@
+.historyCard {
+  border: 3px solid #888;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  min-width: 200px;
+}
+
+.historyCard:hover {
+  transform: scale(1.05);
+}
+
+.hc-row {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.hc-result {
+  font-weight: bold;
+  font-size: 14px;
+}
