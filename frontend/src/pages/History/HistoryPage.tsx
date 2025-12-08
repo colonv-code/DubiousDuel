@@ -10,11 +10,11 @@ export interface HistoryPageProps {
 }
 
 export function HistoryPage({ trainer }: HistoryPageProps) {
+  if (!trainer) return;
+
   const [battles, setBattles] = useState<Battle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBattle, setSelectedBattle] = useState<Battle | null>(null);
-
-  if (!trainer) return;
 
   useEffect(() => {
     setIsLoading(true);

@@ -81,6 +81,7 @@ export function BattlePage({ trainer }: BattlePageProps) {
   return (
     <>
       <div className="battlePage">
+        <h1>Battle</h1>
         <div className="battleHeader">
           <button className="battleButton" onClick={onStartNewBattleClick}>
             Start New Battle
