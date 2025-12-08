@@ -1,0 +1,72 @@
+.pokemonModalContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  width: 600px;
+  max-width: 90vw;
+  border-radius: 12px;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+.main {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.stats {
+  flex: 1;
+}
+.pokemonModalContainer::-webkit-scrollbar-track {
+  background: #555;
+  border-radius: 5px;
+}
+.pokemonModal-image {
+  border: 3px solid goldenrod;
+  border-radius: 8px;
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.pokemonModal-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.modalCloseButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.pokemonModal-movesTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.pokemonModal-movesTable th,
+.pokemonModal-movesTable td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pokemonModal-movesTable th {
+  background-color: rgb(73, 107, 138);
+  font-weight: bold;
+}
+
+.pokemonModal-movesTable tr:nth-child(even) {
+  background-color: rgb(73, 107, 138);
+}

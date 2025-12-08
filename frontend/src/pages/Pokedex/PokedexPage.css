@@ -1,0 +1,8 @@
+.pokedexPage {
+  padding: 16px;
+}
+
+.pokemonList {
+  display: flex;
+  flex-wrap: wrap;
+}
