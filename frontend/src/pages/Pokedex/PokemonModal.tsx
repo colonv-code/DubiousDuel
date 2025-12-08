@@ -11,44 +11,46 @@ export interface PokemonModalProps {
 
 export function PokemonModal({ visible, pokemon, onClose }: PokemonModalProps) {
   return (
-    <Modal visible={visible} onClose={onClose}>
-      <div className="pokemonModalContainer">
-        <button className="modalCloseButton" onClick={onClose}>
-          ✕
-        </button>
-        <h2>{pokemon.Name}</h2>
-        <div className="main">
-          <div className="pokemonModal-image">
-            <img src={nameToImageUri(pokemon.Name)} alt={pokemon.Name} />
+    <div className="pokemonModalOuter">
+      <Modal visible={visible} onClose={onClose}>
+        <div className="pokemonModalContainer">
+          <button className="modalCloseButton" onClick={onClose}>
+            ✕
+          </button>
+          <h2>{pokemon.Name}</h2>
+          <div className="main">
+            <div className="pokemonModal-image">
+              <img src={nameToImageUri(pokemon.Name)} alt={pokemon.Name} />
+            </div>
+            <div className="stats">
+              <p>❤️ HP: {pokemon.HP}</p>
+              <p>⚔️ Attack: {pokemon.Attack}</p>
+              <p>🛡️ Defense: {pokemon.Defense}</p>
+              <p>💨 Speed: {pokemon.Speed}</p>
+            </div>
           </div>
-          <div className="stats">
-            <p>❤️ HP: {pokemon.HP}</p>
-            <p>⚔️ Attack: {pokemon.Attack}</p>
-            <p>🛡️ Defense: {pokemon.Defense}</p>
-            <p>💨 Speed: {pokemon.Speed}</p>
-          </div>
-        </div>
 
-        <h3>Moves</h3>
-        <table className="pokemonModal-movesTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Power</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(pokemon.Moves).map(([moveName, move]) => (
-              <tr key={moveName}>
-                <td>{moveName}</td>
-                <td>{move.Description}</td>
-                <td>{move.Power}</td>
+          <h3>Moves</h3>
+          <table className="pokemonModal-movesTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Power</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Modal>
+            </thead>
+            <tbody>
+              {Object.entries(pokemon.Moves).map(([moveName, move]) => (
+                <tr key={moveName}>
+                  <td>{moveName}</td>
+                  <td>{move.Description}</td>
+                  <td>{move.Power}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Modal>
+    </div>
   );
 }
