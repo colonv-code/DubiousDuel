@@ -1,5 +1,5 @@
 .pokedexPage {
-  padding: 16px;
+  padding-left: 16px;
   height: 100vh;
   overflow-y: scroll;
 }

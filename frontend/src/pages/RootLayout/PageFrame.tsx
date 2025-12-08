@@ -30,12 +30,8 @@ export function PageFrame() {
     battle: (
       <BattlePage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
     ),
-    history: (
-      <HistoryPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
-    ),
-    pokedex: (
-      <PokedexPage trainer={loggedInTrainer} setTrainer={setLoggedInTrainer} />
-    ),
+    history: <HistoryPage trainer={loggedInTrainer} />,
+    pokedex: <PokedexPage />,
   };
 
   const handleLogoutClick = () => {
