@@ -2,6 +2,7 @@ import type { Pokemon } from "../../api/pokemon.api";
 import { Modal } from "../../components/Modal";
 import "./PokemonModal.css";
 import { nameToImageUri } from "../../helpers/nameToImageUri";
+import TypePill from "../../components/TypePill";
 
 export interface PokemonModalProps {
   pokemon: Pokemon;
@@ -23,9 +24,14 @@ export function PokemonModal({ visible, pokemon, onClose }: PokemonModalProps) {
               <img src={nameToImageUri(pokemon.Name)} alt={pokemon.Name} />
             </div>
             <div className="stats">
+              <TypePill type={pokemon.Type1} />
+              {pokemon.Type2 !== "None" && <TypePill type={pokemon.Type2} />}
+              <p>Category: {pokemon.Category}</p>
               <p>❤️ HP: {pokemon.HP}</p>
               <p>⚔️ Attack: {pokemon.Attack}</p>
               <p>🛡️ Defense: {pokemon.Defense}</p>
+              <p>✨ Sp. Attack: {pokemon.SpAttack}</p>
+              <p>🫧 Sp. Defense: {pokemon.SpDefense}</p>
               <p>💨 Speed: {pokemon.Speed}</p>
             </div>
           </div>

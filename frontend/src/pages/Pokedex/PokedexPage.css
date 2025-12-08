@@ -1,5 +1,7 @@
 .pokedexPage {
   padding: 16px;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .pokemonList {

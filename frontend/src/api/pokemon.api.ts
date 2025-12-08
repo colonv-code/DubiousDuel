@@ -1,9 +1,29 @@
+export type PokemonType =
+  | "Normal"
+  | "Fire"
+  | "Water"
+  | "Electric"
+  | "Grass"
+  | "Ice"
+  | "Fighting"
+  | "Poison"
+  | "Ground"
+  | "Flying"
+  | "Psychic"
+  | "Bug"
+  | "Rock"
+  | "Ghost"
+  | "Dragon"
+  | "Dark"
+  | "Steel"
+  | "Fairy";
+
 export interface Pokemon {
   _id: string;
   Id: string;
   Name: string;
-  Type1: string;
-  Type2: string | null;
+  Type1: PokemonType;
+  Type2: PokemonType | "None";
   Abilities: string[];
   Category: string;
   HeightFt: string;
@@ -35,5 +55,20 @@ export interface Move {
 
 export async function getPokemon() {
   const res = await fetch("http://localhost:3001/pokemon");
-  return (await res.json()) as Pokemon[];
+  const json = await res.json();
+  const formattedData: Pokemon[] = json.map((pokeData: any) => ({
+    ...pokeData,
+    SpAttack: pokeData["Sp. Attack"],
+    SpDefense: pokeData["Sp. Defense"],
+    Type1: pokeData["Type 1"],
+    Type2: pokeData["Type 2"],
+    HeightFt: pokeData["Height (ft)"],
+    HeightM: pokeData["Height (m)"],
+    WeightLbs: pokeData["Weight (lbs)"],
+    WeightKg: pokeData["Weight (kg)"],
+    EggSteps: pokeData["Egg Steps"],
+    ExpGroup: pokeData["Exp Group"],
+    CaptureRate: pokeData["Capture Rate"],
+  }));
+  return formattedData;
 }
