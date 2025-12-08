@@ -38,46 +38,64 @@ export function PageFrame() {
     setLoggedInTrainer(null);
   };
 
+  const createNavClickHandler = (page: Page) => {
+    return () => setCurrentPage(page);
+  };
+
   return (
     <div className="pageframe">
       {showSidebar && (
         <div className="sidebar">
-          <h1>Dubious Duel</h1>
-          <button
-            className={`navbutton ${
-              currentPage === "trainer" && "navbuttonselected"
-            }`}
-            onClick={() => setCurrentPage("trainer")}
-          >
-            Trainer
-          </button>
-          <button
-            className={`navbutton ${
-              currentPage === "battle" && "navbuttonselected"
-            }`}
-            onClick={() => setCurrentPage("battle")}
-          >
-            Battle
-          </button>
-          <button
-            className={`navbutton ${
-              currentPage === "history" && "navbuttonselected"
-            }`}
-            onClick={() => setCurrentPage("history")}
-          >
-            History
-          </button>
-          <button
-            className={`navbutton ${
-              currentPage === "pokedex" && "navbuttonselected"
-            }`}
-            onClick={() => setCurrentPage("pokedex")}
-          >
-            Pokedex
-          </button>
-          <button className={`navbutton`} onClick={handleLogoutClick}>
-            Logout
-          </button>
+          <div className="sidebar-top">
+            <h1>Dubious Duel</h1>
+            <nav className="nav-buttons">
+              <button
+                className={`navbutton ${
+                  currentPage === "trainer" && "navbuttonselected"
+                }`}
+                onClick={createNavClickHandler("trainer")}
+              >
+                <span className="nav-emoji">👤</span>
+                <span className="nav-text">Trainer</span>
+              </button>
+              <button
+                className={`navbutton ${
+                  currentPage === "battle" && "navbuttonselected"
+                }`}
+                onClick={createNavClickHandler("battle")}
+              >
+                <span className="nav-emoji">⚔️</span>
+                <span className="nav-text">Battle</span>
+              </button>
+              <button
+                className={`navbutton ${
+                  currentPage === "history" && "navbuttonselected"
+                }`}
+                onClick={createNavClickHandler("history")}
+              >
+                <span className="nav-emoji">📜</span>
+                <span className="nav-text">Battle History</span>
+              </button>
+              <button
+                className={`navbutton ${
+                  currentPage === "pokedex" && "navbuttonselected"
+                }`}
+                onClick={createNavClickHandler("pokedex")}
+              >
+                <span className="nav-emoji">📖</span>
+                <span className="nav-text">Pokedex</span>
+              </button>
+            </nav>
+          </div>
+          <div className="sidebar-bottom">
+            <button
+              className="navbutton logout-button"
+              onClick={handleLogoutClick}
+            >
+              <span className="nav-emoji">🚪</span>
+              <span className="nav-text">Logout</span>
+            </button>
+          </div>
         </div>
       )}
       <div className="content">{pageComponents[currentPage]}</div>
