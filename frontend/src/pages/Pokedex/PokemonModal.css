@@ -77,3 +77,10 @@
 .pokemonModal-movesTable tr:nth-child(even) {
   background-color: rgb(73, 107, 138);
 }
+
+.image-type-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}

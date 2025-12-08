@@ -20,12 +20,16 @@ export function PokemonModal({ visible, pokemon, onClose }: PokemonModalProps) {
           </button>
           <h2>{pokemon.Name}</h2>
           <div className="main">
-            <div className="pokemonModal-image">
-              <img src={nameToImageUri(pokemon.Name)} alt={pokemon.Name} />
+            <div className="image-type-container">
+              <div className="pokemonModal-image">
+                <img src={nameToImageUri(pokemon.Name)} alt={pokemon.Name} />
+              </div>
+              <div>
+                <TypePill type={pokemon.Type1} />
+                {pokemon.Type2 !== "None" && <TypePill type={pokemon.Type2} />}
+              </div>
             </div>
             <div className="stats">
-              <TypePill type={pokemon.Type1} />
-              {pokemon.Type2 !== "None" && <TypePill type={pokemon.Type2} />}
               <p>Category: {pokemon.Category}</p>
               <p>❤️ HP: {pokemon.HP}</p>
               <p>⚔️ Attack: {pokemon.Attack}</p>
