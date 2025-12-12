@@ -51,6 +51,11 @@ export async function getBattlesForTrainer(username: string) {
   return (await res.json()) as Battle[];
 }
 
+export async function getBattleById(battleId: string) {
+  const res = await fetch(`http://localhost:3001/battles/${battleId}`);
+  return (await res.json()) as Battle;
+}
+
 export async function startBattle(trainer: Trainer) {
   const res = await fetch("http://localhost:3001/battles", {
     method: "POST",

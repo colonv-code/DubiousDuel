@@ -91,6 +91,28 @@ app.get("/battles/refresh", async (req: Request, res: Response) => {
   res.json(result);
 });
 
+// refresh a specific battle by ID
+app.get("/battles/:battleId", async (req: Request, res: Response) => {
+  const battleId = req.params.battleId;
+
+  if (!battleId) {
+    return res.status(400).json({ error: "battleId is required" });
+  }
+
+  try {
+    const battle = await battles.findOne({ _id: new ObjectId(battleId) });
+
+    if (!battle) {
+      return res.status(404).json({ error: "battle not found" });
+    }
+
+    res.json(battle);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Invalid battle ID format" });
+  }
+});
+
 // create a new battle
 // body is a trainer who is creating the battle
 app.post("/battles", async (req: Request, res: Response) => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   processTurn,
+  getBattleById,
   type Battle,
   type BattleTurnRequest,
 } from "../../api/battle.api";
@@ -33,6 +34,22 @@ export function useBattleModal(
     setBattle(battleToAccept);
     setIsVisible(true);
   };
+
+  // Auto-refresh battle every 2 seconds if battle is loaded
+  useEffect(() => {
+    if (!battle?._id) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const updatedBattle = await getBattleById(battle._id);
+        setBattle(updatedBattle);
+      } catch (error) {
+        console.error("Failed to refresh battle:", error);
+      }
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [battle?._id, onAccepted]);
 
   useEffect(() => {
     // update latest turn message
